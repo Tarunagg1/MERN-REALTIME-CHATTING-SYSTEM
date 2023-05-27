@@ -3,6 +3,7 @@ import { ChatState } from '../context/ChatProvider'
 import { Box } from "@chakra-ui/layout";
 import SideDrawer from '../components/miscelleneous/SideDrawer';
 import { useHistory } from "react-router";
+import MyChats from '../components/MyChats';
 
 const Chatpage = () => {
   const [loggedUser, setLoggedUser] = useState();
@@ -12,7 +13,7 @@ const Chatpage = () => {
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    console.log(userInfo);
+    // console.log(userInfo);
     if (!userInfo) {
       history.push('/');
     }
@@ -21,10 +22,10 @@ const Chatpage = () => {
 
   return (
     <div style={{ width: "100%" }}>
-      {user && <SideDrawer />}3
+      {user && <SideDrawer />}
       <Box d="flex" justifyContent="space-between" w="100%" h="91.5vh" p="10px">
-        {/* {user && <MyChats fetchAgain={fetchAgain} />}
-        {user && (
+        {user && <MyChats />}
+        {/* {user && (
           <Chatbox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
         )} */}
       </Box>

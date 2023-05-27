@@ -7,6 +7,8 @@ import NotificationBadge from "react-notification-badge";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import ProfileModal from './ProfileModal';
 import axios from 'axios';
+import ChatLoading from '../ChatLoading';
+import UserListItem from '../userAvtar/UserListItem';
 
 function SideDrawer() {
     const [search, setSearch] = useState("");
@@ -55,13 +57,40 @@ function SideDrawer() {
             };
 
             const { data } = await axios.get(`/api/user?search=${search}`, config);
-
+            // console.log(data);
             setLoading(false);
             setSearchResult(data);
         } catch (error) {
             toast({
                 title: "Error Occured!",
                 description: "Failed to Load the Search Results",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+                position: "bottom-left",
+            });
+        }
+    };
+
+    const accessChat = async (userId) => {
+        try {
+            setLoadingChat(true);
+            const config = {
+                headers: {
+                    "Content-type": "application/json",
+                    Authorization: `Bearer ${user.token}`,
+                },
+            };
+            const { data } = await axios.post(`/api/chat`, { userId }, config);
+
+            if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
+            setSelectedChat(data);
+            setLoadingChat(false);
+            onClose();
+        } catch (error) {
+            toast({
+                title: "Error fetching the chat",
+                description: error.message,
                 status: "error",
                 duration: 5000,
                 isClosable: true,
@@ -137,7 +166,7 @@ function SideDrawer() {
                             />
                             <Button onClick={handleSearch}>Go</Button>
                         </Box>
-                        {/* {loading ? (
+                        {loading ? (
                             <ChatLoading />
                         ) : (
                             searchResult?.map((user) => (
@@ -147,7 +176,7 @@ function SideDrawer() {
                                     handleFunction={() => accessChat(user._id)}
                                 />
                             ))
-                        )} */}
+                        )}
                         {loadingChat && <Spinner ml="auto" d="flex" />}
                     </DrawerBody>
                 </DrawerContent>
