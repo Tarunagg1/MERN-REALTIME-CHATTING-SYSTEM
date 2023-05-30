@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const userRoutes = require('./routes/userRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const messageRoutes = require("./routes/messageRoutes");
 
 const connectDB = require('./config/db');
 
@@ -13,7 +14,7 @@ app.use(express.json()); // to accept json data
 
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
-// app.use("/api/message", messageRoutes);
+app.use("/api/message", messageRoutes);
 
 app.listen(PORT, () => {
     console.log('listening on port ' + PORT);
